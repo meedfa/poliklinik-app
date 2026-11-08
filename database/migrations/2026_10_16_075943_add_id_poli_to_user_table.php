@@ -10,19 +10,21 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-{
-    Schema::table('users', function (Blueprint $table) {
-        $table->foreignId('id_poli')->nullable()->constrained('poli')->cascadeOnDelete();
-    });
-}
-/*
- * Reverse the migrations.
- */
-public function down(): void
-{
-    Schema::table('users', function (Blueprint $table) {
-        $table->dropForeign(['id_poli']);
-        $table->dropColumn('id_poli');
-    });
-}
+    {
+        if (Schema::hasColumn('users', 'id_poli')) {
+            return;
+        }
+
+        Schema::table('users', function (Blueprint $table) {
+            $table->foreignId('id_poli')->nullable()->constrained('poli')->cascadeOnDelete();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        // Keep the nullable relationship on rollback to avoid removing existing user data.
+    }
 };

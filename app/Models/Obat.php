@@ -2,10 +2,16 @@
 
 namespace App\Models;
 
+use Database\Factories\ObatFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Obat extends Model
 {
+    /** @use HasFactory<ObatFactory> */
+    use HasFactory;
+
     protected $table = 'obat';
 
     protected $fillable = [
@@ -14,8 +20,18 @@ class Obat extends Model
         'harga',
     ];
 
-    public function detailPeriksas()
+    public function detailPeriksas(): HasMany
     {
         return $this->hasMany(DetailPeriksa::class, 'id_obat');
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'harga' => 'integer',
+        ];
     }
 }
